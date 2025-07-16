@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# виртуальное окружение
+venv/
+.venv/
+
+# результаты Allure (будут коммититься только HTML-отчёт, а не «сырые» JSON)
+allure-results/
+
+# IDE
+.idea/
+*.iml
