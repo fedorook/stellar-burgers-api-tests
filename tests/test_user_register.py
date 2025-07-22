@@ -1,12 +1,13 @@
 import requests
 import uuid
+import allure
 from tests.config import REGISTER_URL, USER_URL
 
 
 class TestUserRegister:
 
+    @allure.description("Регистрация нового пользователя должна проходить успешно (200 OK).")
     def test_register_new_user_success(self):
-        """Регистрация нового пользователя должна проходить успешно (200 OK)."""
         # Генерируем действительно уникальный e-mail
         email = f"user_{uuid.uuid4().hex}@example.com"
         payload = {
@@ -31,8 +32,8 @@ class TestUserRegister:
         # Опционально: проверяем, что удаление прошло успешно
         assert del_resp.status_code == 200 or del_resp.status_code == 202
 
+    @allure.description("Повторная регистрация того же пользователя должна возвращать ошибку 403.")
     def test_register_existing_user_failed(self):
-        """Повторная регистрация того же пользователя должна возвращать ошибку 403."""
         # Генерируем уникальный e-mail и регистрируем его
         email = f"user_{uuid.uuid4().hex}@example.com"
         password = "password123"

@@ -1,16 +1,17 @@
 import requests
 import pytest
+import allure
 from tests.config import BASE_URL, ORDERS_URL
 
 
 class TestOrderRetrieve:
 
+    @allure.description(
+        "Авторизованный пользователь может получить список своих заказов (200 OK). "
+        "Сначала создаём заказ с реальными ингредиентами, затем проверяем, "
+        "что он отобразился в GET /api/orders."
+    )
     def test_get_orders_auth_success(self, new_user, ingredients):
-        """
-        Авторизованный пользователь может получить список своих заказов (200 OK).
-        Сначала создаём заказ с реальными ингредиентами, затем проверяем,
-        что он отобразился в GET /api/orders.
-        """
         token = new_user["token"]
         headers = {"Authorization": f"Bearer {token}"}
 
@@ -35,15 +36,14 @@ class TestOrderRetrieve:
         assert isinstance(body["orders"], list), "orders должен быть списком"
         # Проверяем, что наш только что созданный заказ есть в списке
         assert len(body["orders"]) > 0, "Список заказов пуст, хотя мы только что создали заказ"
-        # Дополнительно можно проверить, что последних два элемента — это наш заказ:
         last_order = body["orders"][0]
         assert last_order.get("number"), "В заказе нет номера"
         assert isinstance(last_order.get("ingredients"), list), "В заказе нет списка ingredients"
 
+    @allure.description(
+        "Без токена GET /orders должен вернуть 401 Unauthorized (или 403/400 в старых версиях API)."
+    )
     def test_get_orders_unauthorized_failed(self):
-        """
-        Без токена GET /orders должен вернуть 401 Unauthorized (или 403/400 в старых версиях API).
-        """
         resp = requests.get(ORDERS_URL)
         # допускаем разные коды, но без токена это не 200
         assert resp.status_code != 200, (

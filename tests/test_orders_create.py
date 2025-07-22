@@ -1,12 +1,12 @@
 import requests
+import allure
 from tests.config import ORDERS_URL
-
 
 
 class TestOrderCreate:
 
+    @allure.description("Авторизованный пользователь может создать заказ с реальными ингредиентами.")
     def test_create_order_auth_success(self, new_user, ingredients):
-        """Авторизованный пользователь может создать заказ с реальными ингредиентами."""
         token = new_user["token"]
         headers = {"Authorization": f"Bearer {token}"}
         payload = {"ingredients": ingredients[:2]}
@@ -16,12 +16,11 @@ class TestOrderCreate:
         assert data.get("success") is True, f"success должен быть True, тело: {resp.text}"
         assert "order" in data and data["order"].get("number"), f"В ответе нет номера заказа, тело: {resp.text}"
 
+    @allure.description(
+        "Попытка создать заказ без токена: API может разрешить анонимный заказ (200) или вернуть ошибку (400/401). "
+        "Проверяем оба варианта."
+    )
     def test_create_order_unauthorized_behavior(self, ingredients):
-        """
-        Попытка создать заказ без токена:
-        API может разрешить анонимный заказ (200) или вернуть ошибку (400/401).
-        Проверяем оба варианта.
-        """
         payload = {"ingredients": ingredients[:2]}
         resp = requests.post(ORDERS_URL, json=payload)
 
@@ -34,8 +33,8 @@ class TestOrderCreate:
             data = resp.json()
             assert data.get("success") is False, f"При ошибке success должен быть False, получили {data}"
 
+    @allure.description("Пустой список ингредиентов — Bad Request (400).")
     def test_create_order_no_ingredients_failed(self, new_user):
-        """Пустой список ингредиентов — Bad Request (400)."""
         token = new_user["token"]
         headers = {"Authorization": f"Bearer {token}"}
         resp = requests.post(ORDERS_URL, headers=headers, json={"ingredients": []})
@@ -44,8 +43,8 @@ class TestOrderCreate:
         assert data.get("success") is False
         assert data.get("message") == "Ingredient ids must be provided", f"Неверное сообщение: {data}"
 
+    @allure.description("Неверный ID ингредиента — сервер возвращает ошибку 400 или 500.")
     def test_create_order_invalid_ingredient_failed(self, new_user):
-        """Неверный ID ингредиента — сервер возвращает ошибку 400 или 500."""
         token = new_user["token"]
         headers = {"Authorization": f"Bearer {token}"}
         fake_id = "611111111111111111111111"

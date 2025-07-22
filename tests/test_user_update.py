@@ -1,12 +1,12 @@
 import requests
+import allure
 from tests.config import USER_URL
 
 
 class TestUserUpdate:
 
-
+    @allure.description("Авторизованный пользователь может изменить свои данные (имя, email или пароль).")
     def test_update_user_with_auth(self, new_user):
-        """Авторизованный пользователь может изменить свои данные (имя, email или пароль)."""
         token = new_user["token"]
         headers = {"Authorization": f"Bearer {token}"}
         # Новые данные для пользователя
@@ -21,8 +21,8 @@ class TestUserUpdate:
         assert body["user"]["name"] == new_name, "Имя пользователя должно обновиться"
         assert body["user"]["email"] == new_email, "Email пользователя не должен измениться (мы не меняли его)"
 
+    @allure.description("Запрос на изменение профиля без токена должен возвращать 401 Unauthorized.")
     def test_update_user_without_auth(self):
-        """Запрос на изменение профиля без токена должен возвращать 401 Unauthorized."""
         payload = {"name": "Hacker"}  # пытаемся сменить имя без авторизации
         resp = requests.patch(USER_URL, json=payload)  # без заголовка Authorization
         assert resp.status_code == 401, "Ожидается 401 Unauthorized без токена"

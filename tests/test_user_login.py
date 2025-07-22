@@ -1,11 +1,12 @@
 import requests
+import allure
 from tests.config import LOGIN_URL
+
 
 class TestUserLogin:
 
-
+    @allure.description("Авторизация с корректными учетными данными должна проходить успешно (200).")
     def test_login_success(self, new_user):
-        """Авторизация с корректными учетными данными должна проходить успешно (200)."""
         # new_user fixture создала пользователя, берем его email и пароль
         email = new_user["email"]
         password = new_user["password"]
@@ -18,8 +19,8 @@ class TestUserLogin:
         assert body["user"]["email"] == email, "Email в ответе должен совпадать с залогиненным"
         assert body["user"]["name"], "Имя пользователя должно присутствовать в ответе"
 
+    @allure.description("Попытка авторизации с неверным логином/паролем должна возвращать 401.")
     def test_login_wrong_credentials(self):
-        """Попытка авторизации с неверным логином/паролем должна возвращать 401."""
         # Несуществующие учетные данные
         fake_email = "nonexistent@example.com"
         fake_pass = "wrongPassword"
