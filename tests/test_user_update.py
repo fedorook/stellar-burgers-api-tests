@@ -1,8 +1,9 @@
 import requests
+from tests.config import USER_URL
+
 
 class TestUserUpdate:
 
-    USER_URL = "https://stellarburgers.nomoreparties.site/api/auth/user"
 
     def test_update_user_with_auth(self, new_user):
         """Авторизованный пользователь может изменить свои данные (имя, email или пароль)."""
@@ -12,7 +13,7 @@ class TestUserUpdate:
         new_name = "UpdatedName"
         new_email = new_user["email"]  # оставим тот же email для простоты
         payload = {"email": new_email, "name": new_name}
-        resp = requests.patch(self.USER_URL, headers=headers, json=payload)
+        resp = requests.patch(USER_URL, headers=headers, json=payload)
         assert resp.status_code == 200, "Статус код должен быть 200 при обновлении с авторизацией"
         body = resp.json()
         assert body.get("success") is True
@@ -23,7 +24,7 @@ class TestUserUpdate:
     def test_update_user_without_auth(self):
         """Запрос на изменение профиля без токена должен возвращать 401 Unauthorized."""
         payload = {"name": "Hacker"}  # пытаемся сменить имя без авторизации
-        resp = requests.patch(self.USER_URL, json=payload)  # без заголовка Authorization
+        resp = requests.patch(USER_URL, json=payload)  # без заголовка Authorization
         assert resp.status_code == 401, "Ожидается 401 Unauthorized без токена"
         body = resp.json()
         assert body.get("success") is False

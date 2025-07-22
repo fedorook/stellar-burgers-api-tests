@@ -1,7 +1,7 @@
 import requests
+import pytest
+from tests.config import BASE_URL, ORDERS_URL
 
-BASE_URL = "https://stellarburgers.nomoreparties.site"
-ORDERS_URL = BASE_URL + "/api/orders"
 
 class TestOrderRetrieve:
 

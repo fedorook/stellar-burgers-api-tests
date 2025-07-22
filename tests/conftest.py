@@ -1,14 +1,7 @@
 import time
 import requests
 import pytest
-
-BASE_URL = "https://stellarburgers.nomoreparties.site"
-# URL эндпоинтов:
-REGISTER_URL = BASE_URL + "/api/auth/register"
-LOGIN_URL = BASE_URL + "/api/auth/login"
-USER_URL = BASE_URL + "/api/auth/user"
-ORDERS_URL = BASE_URL + "/api/orders"
-INGREDIENTS_URL = BASE_URL + "/api/ingredients"
+from tests.config import REGISTER_URL, USER_URL, INGREDIENTS_URL
 
 
 @pytest.fixture

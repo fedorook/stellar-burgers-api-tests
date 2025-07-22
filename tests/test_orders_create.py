@@ -1,7 +1,7 @@
 import requests
+from tests.config import ORDERS_URL
 
-BASE_URL = "https://stellarburgers.nomoreparties.site"
-ORDERS_URL = BASE_URL + "/api/orders"
+
 
 class TestOrderCreate:
 

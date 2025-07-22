@@ -1,9 +1,7 @@
 import requests
 import uuid
+from tests.config import REGISTER_URL, USER_URL
 
-BASE_URL = "https://stellarburgers.nomoreparties.site"
-REGISTER_URL = BASE_URL + "/api/auth/register"
-DELETE_USER_URL = BASE_URL + "/api/auth/user"
 
 class TestUserRegister:
 
@@ -29,7 +27,7 @@ class TestUserRegister:
         if token.startswith("Bearer "):
             token = token.split("Bearer ")[1]
         headers = {"Authorization": f"Bearer {token}"}
-        del_resp = requests.delete(DELETE_USER_URL, headers=headers)
+        del_resp = requests.delete(USER_URL, headers=headers)
         # Опционально: проверяем, что удаление прошло успешно
         assert del_resp.status_code == 200 or del_resp.status_code == 202
 
@@ -59,5 +57,5 @@ class TestUserRegister:
 
         # Чистка: удаляем созданного пользователя
         headers = {"Authorization": f"Bearer {token}"}
-        del_resp = requests.delete(DELETE_USER_URL, headers=headers)
+        del_resp = requests.delete(USER_URL, headers=headers)
         assert del_resp.status_code == 200 or del_resp.status_code == 202
